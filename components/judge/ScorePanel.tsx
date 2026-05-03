@@ -5,6 +5,14 @@ import { GlassCard } from '@/components/GlassCard'
 import { CTAButton } from '@/components/CTAButton'
 import { cn } from '@/lib/utils'
 
+interface AIScore {
+  innovation: number
+  technical_complexity: number
+  completeness: number
+  final_score: number
+  reasoning: string
+}
+
 interface ScorePanelProps {
   projectId: number
   project: {
@@ -14,6 +22,7 @@ interface ScorePanelProps {
     commit_count: number
     github_stars: number
   }
+  preloadedScore?: AIScore
   onScoreSubmit?: (scores: ScoreData) => void
 }
 
@@ -26,24 +35,24 @@ export interface ScoreData {
   feedback: string
 }
 
-interface AIScore {
-  innovation: number
-  technical_complexity: number
-  completeness: number
-  final_score: number
-  reasoning: string
-}
-
-export function ScorePanel({ project, onScoreSubmit }: ScorePanelProps) {
-  const [scores, setScores] = useState({ innovation: 5, execution: 5, impact: 5 })
+export function ScorePanel({ project, preloadedScore, onScoreSubmit }: ScorePanelProps) {
+  const [scores, setScores] = useState({
+    innovation: preloadedScore?.innovation ?? 5,
+    execution: preloadedScore?.technical_complexity ?? 5,
+    impact: preloadedScore?.completeness ?? 5,
+  })
   const [feedback, setFeedback] = useState('')
-  const [aiScore, setAiScore] = useState<AIScore | null>(null)
+  const [aiScore, setAiScore] = useState<AIScore | null>(preloadedScore ?? null)
   const [loadingAI, setLoadingAI] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  const humanScore = Math.round((scores.innovation + scores.execution + scores.impact) / 3 * 10) / 10
+  const humanScore = Math.round(((scores.innovation + scores.execution + scores.impact) / 3) * 10) / 10
 
   async function fetchAIScore() {
+    if (preloadedScore) {
+      setAiScore(preloadedScore)
+      return
+    }
     setLoadingAI(true)
     try {
       const res = await fetch('/api/ai/score', {
@@ -73,21 +82,26 @@ export function ScorePanel({ project, onScoreSubmit }: ScorePanelProps) {
   return (
     <GlassCard hover={false} className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">Score</p>
-        <CTAButton size="sm" onClick={fetchAIScore} disabled={loadingAI}>
-          {loadingAI ? 'Analyzing...' : 'AI Suggest Score'}
+        <div className="flex items-center gap-2">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">Score</p>
+          <span className="text-xs text-muted-foreground border border-white/10 rounded-full px-2 py-0.5 bg-white/5">
+            Smart Score
+          </span>
+        </div>
+        <CTAButton size="sm" onClick={fetchAIScore} disabled={loadingAI || !!aiScore}>
+          {loadingAI ? 'Analyzing...' : aiScore ? 'AI Score Loaded' : 'AI Suggest Score'}
         </CTAButton>
       </div>
 
       {/* AI suggested score */}
       {aiScore && (
-        <div className="liquid-glass rounded-xl p-4 animate-fade-rise">
-          <p className="text-xs text-muted-foreground mb-2">AI Suggested</p>
+        <div className="liquid-glass rounded-xl p-4 animate-fade-rise bg-white/[0.03]">
+          <p className="text-xs text-muted-foreground mb-2">AI Suggested Score</p>
           <div className="flex items-baseline gap-2 mb-1">
             <span className="text-3xl font-light text-foreground">{aiScore.final_score}</span>
             <span className="text-xs text-muted-foreground">/10</span>
           </div>
-          <p className="text-xs text-muted-foreground">{aiScore.reasoning}</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">{aiScore.reasoning}</p>
         </div>
       )}
 
@@ -110,20 +124,22 @@ export function ScorePanel({ project, onScoreSubmit }: ScorePanelProps) {
       ))}
 
       {/* Human total */}
-      <div className="flex items-center justify-between pt-2 border-t border-border">
+      <div className="flex items-center justify-between pt-3 border-t border-white/10">
         <p className="text-xs text-muted-foreground">Your Score</p>
-        <p className={cn('text-2xl font-light', humanScore >= 7 ? 'text-emerald-400' : humanScore >= 5 ? 'text-yellow-400' : 'text-red-400')}>
+        <p className={cn('text-2xl font-light',
+          humanScore >= 7 ? 'text-emerald-400' : humanScore >= 5 ? 'text-yellow-400' : 'text-red-400'
+        )}>
           {humanScore}<span className="text-xs text-muted-foreground">/10</span>
         </p>
       </div>
 
-      {/* Feedback */}
+      {/* Notes */}
       <textarea
         rows={3}
         value={feedback}
         onChange={(e) => setFeedback(e.target.value)}
         placeholder="Notes for the team..."
-        className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground/30 transition-colors resize-none"
+        className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-white/30 transition-colors resize-none"
       />
 
       <CTAButton size="md" onClick={submit} disabled={submitted} className="w-full justify-center">

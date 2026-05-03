@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { DemoAuthProvider } from '@/contexts/DemoAuthContext'
+import { AppStoreProvider } from '@/contexts/AppStoreContext'
+import { ProjectsProvider } from '@/contexts/ProjectsContext'
 import './globals.css'
 
 const inter = Inter({ 
@@ -52,7 +55,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+        <DemoAuthProvider>
+          <AppStoreProvider>
+            {children}
+          </AppStoreProvider>
+        </DemoAuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

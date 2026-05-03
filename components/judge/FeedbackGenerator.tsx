@@ -4,15 +4,6 @@ import { useState } from 'react'
 import { GlassCard } from '@/components/GlassCard'
 import { CTAButton } from '@/components/CTAButton'
 
-interface FeedbackGeneratorProps {
-  project: {
-    title: string
-    description: string
-    tech_stack: string[]
-  }
-  scores: { innovation: number; execution: number; impact: number }
-}
-
 interface AIFeedback {
   strengths: string[]
   weaknesses: string[]
@@ -20,11 +11,25 @@ interface AIFeedback {
   closing: string
 }
 
-export function FeedbackGenerator({ project, scores }: FeedbackGeneratorProps) {
-  const [feedback, setFeedback] = useState<AIFeedback | null>(null)
+interface FeedbackGeneratorProps {
+  project: {
+    title: string
+    description: string
+    tech_stack: string[]
+  }
+  scores: { innovation: number; execution: number; impact: number }
+  preloaded?: AIFeedback
+}
+
+export function FeedbackGenerator({ project, scores, preloaded }: FeedbackGeneratorProps) {
+  const [feedback, setFeedback] = useState<AIFeedback | null>(preloaded ?? null)
   const [loading, setLoading] = useState(false)
 
   async function generate() {
+    if (preloaded) {
+      setFeedback(preloaded)
+      return
+    }
     setLoading(true)
     try {
       const res = await fetch('/api/ai/feedback', {
@@ -42,18 +47,35 @@ export function FeedbackGenerator({ project, scores }: FeedbackGeneratorProps) {
   return (
     <GlassCard hover={false} className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">AI Feedback</p>
-        <CTAButton size="sm" onClick={generate} disabled={loading}>
-          {loading ? 'Generating...' : 'Generate Feedback'}
-        </CTAButton>
+        <div className="flex items-center gap-2">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">AI Feedback</p>
+          <span className="text-xs text-muted-foreground border border-white/10 rounded-full px-2 py-0.5 bg-white/5">
+            AI Generated
+          </span>
+        </div>
+        {!feedback && (
+          <CTAButton size="sm" onClick={generate} disabled={loading}>
+            {loading ? 'Generating...' : 'Generate Feedback'}
+          </CTAButton>
+        )}
       </div>
 
-      {feedback && (
+      {loading && (
+        <div className="flex flex-col gap-3 animate-pulse">
+          {[80, 60, 70, 50].map((w, i) => (
+            <div key={i} className="h-3 bg-white/10 rounded-full" style={{ width: `${w}%` }} />
+          ))}
+        </div>
+      )}
+
+      {feedback && !loading && (
         <div className="flex flex-col gap-5 animate-fade-rise">
           <FeedbackSection label="Strengths" items={feedback.strengths} color="text-emerald-400" />
           <FeedbackSection label="Weaknesses" items={feedback.weaknesses} color="text-yellow-400" />
-          <FeedbackSection label="Suggestions" items={feedback.suggestions} color="text-foreground" />
-          <p className="text-sm text-muted-foreground italic border-t border-border pt-4">{feedback.closing}</p>
+          <FeedbackSection label="Suggestions" items={feedback.suggestions} color="text-foreground/90" />
+          <p className="text-sm text-muted-foreground italic border-t border-white/10 pt-4">
+            {feedback.closing}
+          </p>
         </div>
       )}
     </GlassCard>
@@ -61,6 +83,7 @@ export function FeedbackGenerator({ project, scores }: FeedbackGeneratorProps) {
 }
 
 function FeedbackSection({ label, items, color }: { label: string; items: string[]; color: string }) {
+  if (!items?.length) return null
   return (
     <div>
       <p className="text-xs text-muted-foreground mb-2">{label}</p>

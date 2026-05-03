@@ -19,14 +19,14 @@ export function Hero() {
       </p>
 
       <div className="animate-fade-rise-delay-2 flex items-center gap-6 mt-12">
-        <Link href="/explore">
-          <CTAButton size="lg">Explore Hackathons</CTAButton>
+        <Link href="/demo-login">
+          <CTAButton size="lg">Try the Demo</CTAButton>
         </Link>
         <Link
-          href="/profile"
+          href="/explore"
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          View Profile →
+          Explore Hackathons →
         </Link>
       </div>
     </section>

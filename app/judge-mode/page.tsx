@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useMemo } from 'react'
-import { Navigation } from '@/components/navigation'
+import { PageShell } from '@/components/PageShell'
 import { AISummaryCard } from '@/components/judge/AISummaryCard'
 import { ScorePanel } from '@/components/judge/ScorePanel'
 import { FeedbackGenerator } from '@/components/judge/FeedbackGenerator'
 import { EffortBadge } from '@/components/judge/EffortBadge'
 import { JudgeControls } from '@/components/judge/JudgeControls'
-import { PROJECTS } from '@/lib/data'
+import { DEMO_PROJECTS } from '@/lib/demo/data'
 
 export default function JudgeMode() {
   const [index, setIndex] = useState(0)
@@ -16,22 +16,19 @@ export default function JudgeMode() {
   const [scores, setScores] = useState({ innovation: 5, execution: 5, impact: 5 })
 
   const pool = useMemo(() => {
-    if (!highlightOnly) return PROJECTS
-    return PROJECTS.filter((p) => p.github_stars >= 40 || p.commit_count >= 100)
+    if (!highlightOnly) return DEMO_PROJECTS
+    return DEMO_PROJECTS.filter((p) => p.effort_score >= 8 || p.github_stars >= 80)
   }, [highlightOnly])
 
   const project = pool[index] ?? pool[0]
   if (!project) return null
 
-  const displayProject = blindMode
-    ? { ...project, author_name: '— Hidden —', author_college: '— Hidden —', team: '— Hidden —' }
-    : project
+  const displayTeam = blindMode ? '— Hidden —' : project.team
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col overflow-hidden">
-      <Navigation />
+    <PageShell>
+      <div className="max-w-7xl mx-auto w-full px-6 md:px-8 py-10 flex flex-col gap-8">
 
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-8 py-10 flex flex-col gap-8">
         {/* Controls */}
         <JudgeControls
           current={index}
@@ -45,8 +42,8 @@ export default function JudgeMode() {
         />
 
         {/* Project header */}
-        <div className="animate-fade-rise">
-          <div className="flex items-start justify-between flex-wrap gap-3 mb-2">
+        <div className="animate-fade-rise liquid-glass rounded-3xl p-8 bg-white/[0.04]">
+          <div className="flex items-start justify-between flex-wrap gap-3 mb-3">
             <h1
               className="text-4xl sm:text-5xl font-normal text-foreground leading-tight"
               style={{ fontFamily: "'Instrument Serif', serif", letterSpacing: '-0.03em' }}
@@ -57,66 +54,82 @@ export default function JudgeMode() {
               commit_count={project.commit_count}
               contributors={project.contributors}
               github_stars={project.github_stars}
+              preloaded={project.effort_score}
             />
           </div>
 
-          {!blindMode && (
-            <p className="text-muted-foreground text-sm">
-              {displayProject.team} · {project.track}
-            </p>
-          )}
+          <p className="text-muted-foreground text-sm mb-4">
+            {displayTeam} · {project.track}
+          </p>
 
-          <p className="text-foreground text-base leading-relaxed max-w-2xl mt-4">
+          <p className="text-foreground/90 text-base leading-relaxed max-w-2xl mb-5">
             {project.description}
           </p>
 
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex flex-wrap gap-2 mb-5">
             {project.tech_stack.map((t) => (
-              <span key={t} className="text-xs text-muted-foreground border border-border rounded-full px-3 py-0.5">{t}</span>
+              <span key={t} className="text-xs text-muted-foreground border border-white/10 rounded-full px-3 py-0.5 bg-white/5">
+                {t}
+              </span>
             ))}
           </div>
 
-          <div className="flex gap-5 mt-4 text-xs">
-            <a href={project.github_url} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex gap-5 text-xs pt-4 border-t border-white/10">
+            <a href={project.github_url} target="_blank" rel="noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors">
               GitHub →
             </a>
             {project.demo_url && (
-              <a href={project.demo_url} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href={project.demo_url} target="_blank" rel="noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors">
                 Live Demo →
               </a>
             )}
           </div>
         </div>
 
-        {/* Story Mode sections */}
+        {/* Story Mode — Problem / Solution / Impact */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-rise-delay">
           {[
-            { label: 'Problem', text: 'Developers waste hours on noisy, slow code review workflows.' },
-            { label: 'Solution', text: project.description },
-            { label: 'Impact', text: `${project.github_stars} stars · ${project.commit_count} commits · ${project.contributors} contributors` },
+            { label: 'Problem', text: project.problem },
+            { label: 'Solution', text: project.solution },
+            { label: 'Impact', text: project.impact },
           ].map(({ label, text }) => (
-            <div key={label} className="liquid-glass rounded-2xl p-5">
+            <div key={label} className="liquid-glass rounded-2xl p-5 bg-white/[0.04]">
               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
-              <p className="text-sm text-foreground leading-relaxed">{text}</p>
+              <p className="text-sm text-foreground/90 leading-relaxed">{text}</p>
             </div>
           ))}
         </div>
 
-        {/* AI + Scoring grid */}
+        {/* AI Brief + Score — pre-loaded, instant */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-rise-delay-2">
-          <AISummaryCard project={project} />
+          <AISummaryCard
+            project={project}
+            preloaded={project.ai_brief}
+          />
           <ScorePanel
             projectId={project.id}
             project={project}
-            onScoreSubmit={(s) => setScores({ innovation: s.innovation, execution: s.execution, impact: s.impact })}
+            preloadedScore={project.ai_score}
+            onScoreSubmit={(s) => setScores({
+              innovation: s.innovation,
+              execution: s.execution,
+              impact: s.impact,
+            })}
           />
         </div>
 
-        {/* Feedback */}
-        <div className="animate-fade-rise-delay-2">
-          <FeedbackGenerator project={project} scores={scores} />
+        {/* AI Feedback — pre-loaded */}
+        <div className="animate-fade-rise-delay-2 pb-10">
+          <FeedbackGenerator
+            project={project}
+            scores={scores}
+            preloaded={project.ai_feedback}
+          />
         </div>
+
       </div>
-    </div>
+    </PageShell>
   )
 }

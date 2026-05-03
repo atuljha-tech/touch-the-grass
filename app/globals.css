@@ -7,11 +7,11 @@
   --font-display: 'Instrument Serif', serif;
   --font-body: 'Inter', var(--font-inter), sans-serif;
   
-  --background: 201 100% 13%;
+  --background: 0 0% 0%;
   --foreground: 0 0% 100%;
-  --card: 201 100% 13%;
+  --card: 0 0% 0%;
   --card-foreground: 0 0% 100%;
-  --popover: 201 100% 13%;
+  --popover: 0 0% 0%;
   --popover-foreground: 0 0% 100%;
   --primary: 0 0% 100%;
   --primary-foreground: 0 0% 4%;

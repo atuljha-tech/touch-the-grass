@@ -3,7 +3,7 @@ import { Hero } from "@/components/hero"
 
 export default function Home() {
   return (
-    <div className="bg-background text-foreground">
+    <div className="bg-black text-foreground">
 
       {/* ── HERO — full viewport with video ── */}
       <div className="relative min-h-screen overflow-hidden">

@@ -18,17 +18,11 @@ const DemoAuthContext = createContext<DemoAuthContextValue>({
 export function DemoAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<DemoUser | null>(null)
 
-  // Restore from localStorage on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem('ttg_demo_user')
       if (stored) setUser(JSON.parse(stored))
-      else {
-        // Auto-login as judge for demo flow
-        const judge = DEMO_USERS.find((u) => u.role === 'judge')!
-        setUser(judge)
-        localStorage.setItem('ttg_demo_user', JSON.stringify(judge))
-      }
+      // No auto-login — let users choose their role
     } catch {
       // ignore
     }

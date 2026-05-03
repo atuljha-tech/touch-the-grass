@@ -173,12 +173,18 @@ export default function HackerDashboard() {
           <div className="lg:col-span-2 flex flex-col gap-4">
             <p className="text-xs uppercase tracking-widest text-muted-foreground">My Projects</p>
 
-            {myProjects.length === 0 ? (
-              <GlassCard hover={false}>
-                <p className="text-muted-foreground text-sm">No projects yet. Submit your first project above.</p>
+            {myProjects.length === 0 && (
+              <GlassCard hover={false} className="bg-white/[0.02]">
+                <p className="text-muted-foreground text-sm mb-3">No projects yet.</p>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="text-xs text-foreground border border-white/20 rounded-full px-4 py-1.5 hover:bg-white/5 transition-colors"
+                >
+                  + Submit your first project
+                </button>
               </GlassCard>
-            ) : (
-              myProjects.map((p) => {
+            )}
+              {myProjects.length > 0 && myProjects.map((p) => {
                 const rank = projects.findIndex((x) => x.id === p.id) + 1
                 return (
                   <GlassCard key={p.id} hover={false}>
@@ -209,8 +215,7 @@ export default function HackerDashboard() {
                     </div>
                   </GlassCard>
                 )
-              })
-            )}
+              })}
           </div>
 
           {/* Leaderboard preview */}

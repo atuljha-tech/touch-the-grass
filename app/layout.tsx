@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { DemoAuthProvider } from '@/contexts/DemoAuthContext'
 import { AppStoreProvider } from '@/contexts/AppStoreContext'
+import { DemoGuide } from '@/components/DemoGuide'
 import './globals.css'
 
 const inter = Inter({ 
@@ -57,6 +58,7 @@ export default function RootLayout({
         <DemoAuthProvider>
           <AppStoreProvider>
             {children}
+            <DemoGuide />
           </AppStoreProvider>
         </DemoAuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}

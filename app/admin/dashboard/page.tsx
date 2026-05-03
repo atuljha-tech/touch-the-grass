@@ -22,6 +22,15 @@ export default function AdminDashboard() {
   const [selectedProject, setSelectedProject] = useState<DemoProject | null>(null)
   const [sponsorForm, setSponsorForm] = useState({ name: '', logo_url: '', contribution: '', tier: 'bronze' as DemoSponsor['tier'], website: '' })
   const [sponsorAdded, setSponsorAdded] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const filteredProjects = search.trim()
+    ? projects.filter((p) =>
+        p.title.toLowerCase().includes(search.toLowerCase()) ||
+        p.track.toLowerCase().includes(search.toLowerCase()) ||
+        p.team.toLowerCase().includes(search.toLowerCase())
+      )
+    : projects
 
   const avgScore = projects.length
     ? Math.round((projects.reduce((s, p) => s + p.rank_score, 0) / projects.length) * 10) / 10
@@ -127,9 +136,17 @@ export default function AdminDashboard() {
         {/* ── PROJECTS ── */}
         {tab === 'projects' && (
           <div className="flex flex-col gap-4 animate-fade-rise">
-            <p className="text-xs text-muted-foreground">
-              Sorted by rank score = (AI score × 0.7) + (effort × 0.3)
-            </p>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <p className="text-xs text-muted-foreground">
+                Sorted by rank score = (AI score × 0.7) + (effort × 0.3)
+              </p>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search projects..."
+                className="bg-transparent border border-white/10 rounded-lg px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-white/30 transition-colors w-48"
+              />
+            </div>
 
             {selectedProject ? (
               <ProjectDetail project={selectedProject} onBack={() => setSelectedProject(null)} />
@@ -145,7 +162,7 @@ export default function AdminDashboard() {
                   <span className="col-span-1 text-right">Rank</span>
                 </div>
 
-                {projects.map((p, i) => (
+                {filteredProjects.map((p, i) => (
                   <button key={p.id} onClick={() => setSelectedProject(p)} className="w-full text-left group">
                     <GlassCard hover={false} className="grid grid-cols-12 gap-3 items-center py-4 group-hover:bg-white/[0.07] transition-all">
                       <span className={cn('col-span-1 text-sm font-light',

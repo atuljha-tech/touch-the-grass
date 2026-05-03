@@ -15,7 +15,11 @@ const publicLinks = [
 const roleLinks: Record<string, { href: string; label: string }[]> = {
   admin: [{ href: "/admin/dashboard", label: "Admin" }],
   hacker: [{ href: "/dashboard", label: "Dashboard" }],
-  judge: [{ href: "/judging", label: "Judge" }, { href: "/judge-mode", label: "Judge Mode" }],
+  judge: [
+    { href: "/judging", label: "Judge" },
+    { href: "/judge-mode", label: "Judge Mode" },
+    { href: "/judge/student-analyzer", label: "Analyzer" },
+  ],
   organizer: [{ href: "/explore", label: "Explore" }],
 }
 

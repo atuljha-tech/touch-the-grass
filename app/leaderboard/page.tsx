@@ -5,11 +5,15 @@ import { GlassCard } from '@/components/GlassCard'
 import { AnimatedHeading } from '@/components/AnimatedHeading'
 import { SectionWrapper } from '@/components/SectionWrapper'
 import { useAppStore } from '@/contexts/AppStoreContext'
+import { useDemoAuth } from '@/contexts/DemoAuthContext'
 import { DEMO_HACKERS } from '@/lib/demo/data'
+import { canViewScores } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 
 export default function Leaderboard() {
-  const { projects } = useAppStore()
+  const { projects, isResultPublic } = useAppStore()
+  const { user } = useDemoAuth()
+  const scoresVisible = canViewScores(user?.role, isResultPublic)
 
   return (
     <PageShell>
@@ -20,8 +24,16 @@ export default function Leaderboard() {
         <p className="animate-fade-rise-delay text-muted-foreground text-sm max-w-xl mb-3">
           rank score = (AI score × 0.7) + (effort × 0.3)
         </p>
+
+        {!scoresVisible && (
+          <div className="animate-fade-rise mb-8 rounded-2xl border border-yellow-400/20 bg-yellow-400/5 px-6 py-4 max-w-xl">
+            <p className="text-yellow-400/90 text-sm font-medium mb-1">⏳ Results not yet released</p>
+            <p className="text-yellow-400/60 text-xs">The organizer hasn&apos;t made scores public yet. Rankings will appear here once results are announced.</p>
+          </div>
+        )}
+
         <p className="animate-fade-rise-delay text-muted-foreground text-xs max-w-xl mb-12">
-          {projects.length} projects · updates when new submissions arrive
+          {projects.length} projects · {scoresVisible ? 'scores visible' : 'scores hidden until release'}
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -59,20 +71,26 @@ export default function Leaderboard() {
 
                 <div className="col-span-2 text-center hidden sm:block">
                   <span className={cn('text-sm font-light',
-                    p.ai_score.final_score >= 8 ? 'text-emerald-400' : 'text-yellow-400'
-                  )}>{p.ai_score.final_score}</span>
+                    scoresVisible
+                      ? p.ai_score.final_score >= 8 ? 'text-emerald-400' : 'text-yellow-400'
+                      : 'text-muted-foreground'
+                  )}>{scoresVisible ? p.ai_score.final_score : '—'}</span>
                 </div>
 
                 <div className="col-span-2 text-center hidden sm:block">
                   <span className={cn('text-sm font-light',
-                    p.effort_score >= 8 ? 'text-emerald-400' : p.effort_score >= 5 ? 'text-yellow-400' : 'text-muted-foreground'
-                  )}>{p.effort_score}</span>
+                    scoresVisible
+                      ? p.effort_score >= 8 ? 'text-emerald-400' : p.effort_score >= 5 ? 'text-yellow-400' : 'text-muted-foreground'
+                      : 'text-muted-foreground'
+                  )}>{scoresVisible ? p.effort_score : '—'}</span>
                 </div>
 
                 <div className="col-span-2 text-right">
                   <span className={cn('text-xl font-light',
-                    p.rank_score >= 8 ? 'text-emerald-400' : p.rank_score >= 6 ? 'text-yellow-400' : 'text-muted-foreground'
-                  )}>{p.rank_score}</span>
+                    scoresVisible
+                      ? p.rank_score >= 8 ? 'text-emerald-400' : p.rank_score >= 6 ? 'text-yellow-400' : 'text-muted-foreground'
+                      : 'text-muted-foreground/40 blur-sm select-none'
+                  )}>{scoresVisible ? p.rank_score : '?'}</span>
                 </div>
               </GlassCard>
             ))}
@@ -97,8 +115,10 @@ export default function Leaderboard() {
                       <p className="text-muted-foreground text-xs truncate">{h.college}</p>
                     </div>
                     <span className={cn('text-sm font-light shrink-0',
-                      h.avg_score >= 8 ? 'text-emerald-400' : 'text-yellow-400'
-                    )}>{h.avg_score}</span>
+                      scoresVisible
+                        ? h.avg_score >= 8 ? 'text-emerald-400' : 'text-yellow-400'
+                        : 'text-muted-foreground/40 blur-sm select-none'
+                    )}>{scoresVisible ? h.avg_score : '?'}</span>
                   </GlassCard>
                 ))}
               </div>

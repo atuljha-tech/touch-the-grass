@@ -8,6 +8,7 @@ import { FeedbackGenerator } from '@/components/judge/FeedbackGenerator'
 import { EffortBadge } from '@/components/judge/EffortBadge'
 import { JudgeControls } from '@/components/judge/JudgeControls'
 import { DEMO_PROJECTS } from '@/lib/demo/data'
+import { ResultToggle } from '@/components/ResultToggle'
 
 export default function JudgeMode() {
   const [index, setIndex] = useState(0)
@@ -30,16 +31,19 @@ export default function JudgeMode() {
       <div className="max-w-7xl mx-auto w-full px-6 md:px-8 py-10 flex flex-col gap-8">
 
         {/* Controls */}
-        <JudgeControls
-          current={index}
-          total={pool.length}
-          blindMode={blindMode}
-          highlightOnly={highlightOnly}
-          onPrev={() => setIndex((i) => Math.max(0, i - 1))}
-          onNext={() => setIndex((i) => Math.min(pool.length - 1, i + 1))}
-          onToggleBlind={() => setBlindMode((b) => !b)}
-          onToggleHighlight={() => { setHighlightOnly((h) => !h); setIndex(0) }}
-        />
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <JudgeControls
+            current={index}
+            total={pool.length}
+            blindMode={blindMode}
+            highlightOnly={highlightOnly}
+            onPrev={() => setIndex((i) => Math.max(0, i - 1))}
+            onNext={() => setIndex((i) => Math.min(pool.length - 1, i + 1))}
+            onToggleBlind={() => setBlindMode((b) => !b)}
+            onToggleHighlight={() => { setHighlightOnly((h) => !h); setIndex(0) }}
+          />
+          <ResultToggle />
+        </div>
 
         {/* Project header */}
         <div className="animate-fade-rise liquid-glass rounded-3xl p-8 bg-white/[0.04]">

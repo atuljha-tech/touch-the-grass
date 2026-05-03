@@ -7,6 +7,7 @@ import { CTAButton } from '@/components/CTAButton'
 import { useAppStore } from '@/contexts/AppStoreContext'
 import { type DemoProject, type DemoSponsor } from '@/lib/demo/data'
 import { cn } from '@/lib/utils'
+import { ResultToggle } from '@/components/ResultToggle'
 
 type Tab = 'overview' | 'projects' | 'hackers' | 'sponsors' | 'leaderboard'
 
@@ -57,11 +58,14 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto w-full px-6 md:px-8 py-10 flex flex-col gap-8">
 
         {/* Header */}
-        <div className="animate-fade-rise">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Admin</p>
-          <h1 className="text-4xl font-normal text-foreground" style={{ fontFamily: "'Instrument Serif', serif", letterSpacing: '-0.03em' }}>
-            Control Panel
-          </h1>
+        <div className="animate-fade-rise flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Admin</p>
+            <h1 className="text-4xl font-normal text-foreground" style={{ fontFamily: "'Instrument Serif', serif", letterSpacing: '-0.03em' }}>
+              Control Panel
+            </h1>
+          </div>
+          <ResultToggle />
         </div>
 
         {/* Tabs */}

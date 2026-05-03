@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import {
   DEMO_PROJECTS, DEMO_HACKERS, DEMO_SPONSORS,
   type DemoProject, type DemoHacker, type DemoSponsor,
@@ -11,6 +11,8 @@ interface AppStoreContextValue {
   projects: DemoProject[]
   hackers: DemoHacker[]
   sponsors: DemoSponsor[]
+  isResultPublic: boolean
+  toggleResultVisibility: () => void
   addProject: (draft: NewProjectDraft) => DemoProject
   addSponsor: (s: Omit<DemoSponsor, 'id'>) => void
 }
@@ -30,6 +32,8 @@ const AppStoreContext = createContext<AppStoreContextValue>({
   projects: DEMO_PROJECTS,
   hackers: DEMO_HACKERS,
   sponsors: DEMO_SPONSORS,
+  isResultPublic: false,
+  toggleResultVisibility: () => {},
   addProject: () => { throw new Error('not mounted') },
   addSponsor: () => {},
 })
@@ -38,6 +42,23 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<DemoProject[]>(DEMO_PROJECTS)
   const [hackers] = useState<DemoHacker[]>(DEMO_HACKERS)
   const [sponsors, setSponsors] = useState<DemoSponsor[]>(DEMO_SPONSORS)
+  const [isResultPublic, setIsResultPublic] = useState(false)
+
+  // Persist result visibility across refreshes
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('ttg_results_public')
+      if (stored === 'true') setIsResultPublic(true)
+    } catch { /* ignore */ }
+  }, [])
+
+  function toggleResultVisibility() {
+    setIsResultPublic((prev) => {
+      const next = !prev
+      try { localStorage.setItem('ttg_results_public', String(next)) } catch { /* ignore */ }
+      return next
+    })
+  }
 
   function addProject(draft: NewProjectDraft): DemoProject {
     const id = Date.now()
@@ -95,7 +116,11 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AppStoreContext.Provider value={{ projects, hackers, sponsors, addProject, addSponsor }}>
+    <AppStoreContext.Provider value={{
+      projects, hackers, sponsors,
+      isResultPublic, toggleResultVisibility,
+      addProject, addSponsor,
+    }}>
       {children}
     </AppStoreContext.Provider>
   )

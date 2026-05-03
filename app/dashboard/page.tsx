@@ -7,14 +7,16 @@ import { CTAButton } from '@/components/CTAButton'
 import { useAppStore, type NewProjectDraft } from '@/contexts/AppStoreContext'
 import { useDemoAuth } from '@/contexts/DemoAuthContext'
 import { type DemoProject } from '@/lib/demo/data'
+import { canViewScores } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 
 const TRACKS = ['AI & ML', 'Dev Tooling', 'Health & Wellbeing', 'Smart Cities', 'Open Source', 'FinTech', 'Climate', 'EdTech', 'Other']
 
 export default function HackerDashboard() {
   const { user } = useDemoAuth()
-  const { projects, addProject } = useAppStore()
+  const { projects, addProject, isResultPublic } = useAppStore()
   const hackerId = user?.hacker_id ?? user?.id ?? 'h1'
+  const scoresVisible = canViewScores(user?.role, isResultPublic)
 
   const myProjects = projects.filter((p) => p.hacker_id === hackerId)
   const myRanks = myProjects.map((p) => projects.findIndex((x) => x.id === p.id) + 1)
@@ -66,9 +68,14 @@ export default function HackerDashboard() {
             <h1 className="text-4xl font-normal text-foreground" style={{ fontFamily: "'Instrument Serif', serif", letterSpacing: '-0.03em' }}>
               {user?.name ?? 'Builder'}
             </h1>
-            {myBestRank && (
+            {myBestRank && scoresVisible && (
               <p className="text-muted-foreground text-sm mt-1">
                 Your best rank: <span className="text-foreground">#{myBestRank}</span> of {projects.length}
+              </p>
+            )}
+            {!scoresVisible && (
+              <p className="text-xs text-yellow-400/80 mt-1 border border-yellow-400/20 rounded-full px-3 py-0.5 inline-block">
+                ⏳ Results will be announced soon
               </p>
             )}
           </div>
@@ -203,16 +210,23 @@ export default function HackerDashboard() {
 
                     <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">{p.description}</p>
 
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      <ScoreBox label="AI Score" value={p.ai_score.final_score} />
-                      <ScoreBox label="Effort" value={p.effort_score} />
-                      <ScoreBox label="Rank Score" value={p.rank_score} highlight />
-                    </div>
-
-                    <div className="pt-3 border-t border-white/10">
-                      <p className="text-xs text-muted-foreground mb-1">AI Reasoning</p>
-                      <p className="text-xs text-foreground/80 leading-relaxed">{p.ai_score.reasoning}</p>
-                    </div>
+                    {scoresVisible ? (
+                      <>
+                        <div className="grid grid-cols-3 gap-3 mb-4">
+                          <ScoreBox label="AI Score" value={p.ai_score.final_score} />
+                          <ScoreBox label="Effort" value={p.effort_score} />
+                          <ScoreBox label="Rank Score" value={p.rank_score} highlight />
+                        </div>
+                        <div className="pt-3 border-t border-white/10">
+                          <p className="text-xs text-muted-foreground mb-1">AI Reasoning</p>
+                          <p className="text-xs text-foreground/80 leading-relaxed">{p.ai_score.reasoning}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="rounded-xl border border-yellow-400/20 bg-yellow-400/5 px-4 py-3">
+                        <p className="text-xs text-yellow-400/80">⏳ Under Review — scores will be released by the organizer</p>
+                      </div>
+                    )}
                   </GlassCard>
                 )
               })}
@@ -237,8 +251,10 @@ export default function HackerDashboard() {
                         <p className="text-muted-foreground text-xs truncate">{p.team}</p>
                       </div>
                       <span className={cn('text-xs font-light shrink-0',
-                        p.rank_score >= 8 ? 'text-emerald-400' : p.rank_score >= 6 ? 'text-yellow-400' : 'text-muted-foreground'
-                      )}>{p.rank_score}</span>
+                        scoresVisible
+                          ? p.rank_score >= 8 ? 'text-emerald-400' : p.rank_score >= 6 ? 'text-yellow-400' : 'text-muted-foreground'
+                          : 'text-muted-foreground'
+                      )}>{scoresVisible ? p.rank_score : '—'}</span>
                     </div>
                   )
                 })}
@@ -252,7 +268,7 @@ export default function HackerDashboard() {
                 <StatRow label="Projects submitted" value={myProjects.length} />
                 <StatRow label="Best rank" value={myBestRank ? `#${myBestRank}` : '—'} />
                 <StatRow label="Avg AI score" value={
-                  myProjects.length
+                  scoresVisible && myProjects.length
                     ? Math.round(myProjects.reduce((s, p) => s + p.ai_score.final_score, 0) / myProjects.length * 10) / 10
                     : '—'
                 } />

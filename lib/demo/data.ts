@@ -85,14 +85,14 @@ export interface DemoEvent {
 
 export const DEMO_USERS: DemoUser[] = [
   { id: 'admin-1', name: 'Jordan Lee', email: 'admin@touchgrass.dev', role: 'admin', avatar: 'J' },
-  { id: 'hacker-1', name: 'Alex Rivera', email: 'hacker@touchgrass.dev', role: 'hacker', avatar: 'A', hacker_id: 'h1' },
+  { id: 'hacker-1', name: 'Ayush Kumar', email: 'hacker@touchgrass.dev', role: 'hacker', avatar: 'A', hacker_id: 'h1' },
   { id: 'judge-1', name: 'Dr. Sarah Kim', email: 'judge@touchgrass.dev', role: 'judge', avatar: 'S' },
 ]
 
 // ─── HACKERS ──────────────────────────────────────────────────────────────────
 
 export const DEMO_HACKERS: DemoHacker[] = [
-  { id: 'h1', name: 'Alex Rivera', email: 'alex@dev.io', college: 'MIT', avatar: 'A', skills: ['React', 'TypeScript', 'Go'], projects_submitted: 2, avg_score: 8.5 },
+  { id: 'h1', name: 'Ayush Kumar', email: 'ayush@dev.io', college: 'Your College', avatar: 'A', skills: ['Next.js', 'TypeScript', 'React', 'Node.js'], projects_submitted: 3, avg_score: 8.5 },
   { id: 'h2', name: 'Priya Sharma', email: 'priya@dev.io', college: 'IIT Bombay', avatar: 'P', skills: ['Python', 'PyTorch', 'FastAPI'], projects_submitted: 1, avg_score: 8.7 },
   { id: 'h3', name: 'Marcus Webb', email: 'marcus@dev.io', college: 'Carnegie Mellon', avatar: 'M', skills: ['TypeScript', 'Electron', 'Rust'], projects_submitted: 1, avg_score: 8.3 },
   { id: 'h4', name: 'Aisha Okonkwo', email: 'aisha@dev.io', college: 'UCL', avatar: 'A', skills: ['Next.js', 'LangChain', 'Supabase'], projects_submitted: 1, avg_score: 7.3 },
@@ -227,7 +227,7 @@ export const DEMO_PROJECTS: DemoProject[] = [
 
   makeProject(8, 'EchoSearch', 'Team Signal', 'AI & ML',
     'Semantic search engine for internal documentation that understands natural language queries and surfaces the most relevant content across Notion, Confluence, and GitHub.',
-    ['Python', 'FastAPI', 'Pinecone', 'React'], 58, 88, 3, 'Alex Rivera', 'MIT', 'h1', 'submitted',
+    ['Python', 'FastAPI', 'Pinecone', 'React'], 58, 88, 3, 'Ayush Kumar', 'Your College', 'h1', 'submitted',
     'Internal docs are scattered across tools. Keyword search fails for natural language queries.',
     'Embeds all docs into a vector store and uses semantic similarity to answer natural language questions.',
     ['Multi-source ingestion is the hard part and they solved it', 'Semantic search beats keyword for internal docs', 'React UI is clean and fast'],
@@ -235,7 +235,7 @@ export const DEMO_PROJECTS: DemoProject[] = [
 
   makeProject(9, 'Budgetly', 'Team Frugal', 'FinTech',
     'AI-powered personal finance tracker that categorizes transactions automatically, detects spending patterns, and generates actionable savings recommendations.',
-    ['React', 'Python', 'Plaid API', 'PostgreSQL'], 33, 76, 2, 'Alex Rivera', 'MIT', 'h1', 'submitted',
+    ['React', 'Python', 'Plaid API', 'PostgreSQL'], 33, 76, 2, 'Ayush Kumar', 'Your College', 'h1', 'submitted',
     'Manual expense tracking is tedious. Most people abandon budgeting apps within a week.',
     'Connects to bank accounts via Plaid, auto-categorizes with ML, and surfaces weekly insights.',
     ['Plaid integration handles the hard auth problem', 'ML categorization improves with use', 'Weekly insights are actionable not just informational'],
@@ -323,7 +323,7 @@ export const DEMO_PROJECTS: DemoProject[] = [
 
   makeProject(20, 'TalentGraph', 'Team Hire', 'HR Tech',
     'Skills-based talent matching platform that uses graph algorithms to connect developers with projects based on skill adjacency, not just keyword matching.',
-    ['Python', 'Neo4j', 'React', 'FastAPI'], 43, 87, 3, 'Alex Rivera', 'MIT', 'h1', 'submitted',
+    ['Python', 'Neo4j', 'React', 'FastAPI'], 43, 87, 3, 'Ayush Kumar', 'Your College', 'h1', 'submitted',
     'Keyword-based job matching misses candidates with adjacent skills. Both sides lose.',
     'Graph database models skill relationships, enabling matches based on learning trajectory not just current skills.',
     ['Graph-based skill modeling is architecturally novel', 'Neo4j is the right tool for relationship-heavy data', 'Skill adjacency matching is a genuine insight'],

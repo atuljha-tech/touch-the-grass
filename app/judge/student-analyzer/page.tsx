@@ -51,15 +51,15 @@ const verdictConfig = {
 // ── Demo profiles for quick testing ───────────────────────────────────────────
 
 const DEMO_PROFILES = [
-  { username: 'torvalds',    label: 'Linus Torvalds' },
-  { username: 'gaearon',     label: 'Dan Abramov' },
-  { username: 'sindresorhus', label: 'Sindre Sorhus' },
+  { username: 'ayushkumar2601', label: 'Ayush Kumar (you)' },
+  { username: 'gaearon',        label: 'Dan Abramov' },
+  { username: 'sindresorhus',   label: 'Sindre Sorhus' },
 ]
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function StudentAnalyzer() {
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('ayushkumar2601')
   const [context, setContext] = useState('')
   const [loading, setLoading] = useState(false)
   const [stage, setStage] = useState<'idle' | 'fetching' | 'analyzing' | 'done' | 'error'>('idle')

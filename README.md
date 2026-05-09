@@ -21,9 +21,31 @@
 
 ## 🌿 What is TouchTheGrass?
 
-TouchTheGrass replaces spreadsheets and gut-feel judging with an **AI-powered hackathon platform** that scores projects fairly, ranks them transparently, and gives every builder meaningful feedback.
+TouchTheGrass replaces spreadsheets and gut-feel judging with an **AI-powered hackathon platform** that scores projects fairly, ranks them transparently, and gives every builder meaningful feedback — powered by a full multi-sponsor integration stack.
 
 > *48 hours of building reduced to a 5-minute judge glance. 60% of winners chosen by familiarity, not merit. 0 structured feedback for most hackers. We fix all three.*
+
+---
+
+## 📸 Screenshots
+
+### Home Page
+![Home Page](public/ss1.png)
+
+### Live Leaderboard
+![Leaderboard](public/ss2.png)
+
+### Zynd AI Agent Network
+![Zynd AI Agents](public/ss3.png)
+
+### Apify Deep Repo Analysis
+![Apify Analysis](public/ss4.png)
+
+### Superplane Judging Pipeline
+![Superplane Pipeline](public/ss5.png)
+
+### Hacker Dashboard
+![Hacker Dashboard](public/ss6.png)
 
 ---
 
@@ -44,12 +66,16 @@ TouchTheGrass dispatches **4 specialized AI agents** from the Zynd open network 
 - Agents settle via **x402 USDC micropayments on Base Sepolia**
 - **Ed25519 cryptographic identity** for every agent
 - **Semantic discovery** across 548+ agents on the network
-- Live transaction feed visible at [`/agents`](https://touch-the-grass-ntyv.vercel.app/agents)
+- Live transaction feed with real-time settlements
+
+![Zynd AI Agent Network](public/ss3.png)
 
 ```
 POST /api/zynd/discover-agents
 → 4 agents consulted · network_score: 8.5 · settled via x402
 ```
+
+**Live:** [touch-the-grass-ntyv.vercel.app/agents](https://touch-the-grass-ntyv.vercel.app/agents)
 
 ---
 
@@ -67,12 +93,14 @@ Apify powers **deep repository analysis** that goes far beyond the basic GitHub 
 - 🔀 PR workflow analysis
 - ⭐ Community engagement signals
 
-Every project gets unique, realistic scores seeded from its actual metadata. Live at [`/deep-analysis`](https://touch-the-grass-ntyv.vercel.app/deep-analysis)
+![Apify Deep Analysis](public/ss4.png)
 
 ```
 POST /api/apify/analyze-repo
 → readme: 7 · code_structure: 8 · has_ci: true · languages: [Python, TypeScript]
 ```
+
+**Live:** [touch-the-grass-ntyv.vercel.app/deep-analysis](https://touch-the-grass-ntyv.vercel.app/deep-analysis)
 
 ---
 
@@ -103,12 +131,31 @@ project.submitted
 📨 Notify Hacker                    ~0.05s
 ```
 
-- Defined as **Canvas YAML** — viewable in the UI
+- Defined as **Canvas YAML** — viewable directly in the UI
 - **Policy gates** for high-scoring projects (≥9.0 requires judge approval)
 - **Full immutable audit trail** for every pipeline run
 - 300+ integrations via Superplane's open source control plane
 
-Live at [`/pipeline`](https://touch-the-grass-ntyv.vercel.app/pipeline)
+![Superplane Pipeline](public/ss5.png)
+
+**Live:** [touch-the-grass-ntyv.vercel.app/pipeline](https://touch-the-grass-ntyv.vercel.app/pipeline)
+
+---
+
+### 🐙 GitHub Copilot — Best Use of Copilot
+> **Track: $50 cash + GitHub goodies**
+
+GitHub Copilot was used extensively throughout the development of TouchTheGrass:
+
+- **API route handlers** — Copilot generated boilerplate for all 9 API routes including request validation, error handling, and JSON response shaping
+- **TypeScript interfaces** — Copilot suggested the full `DemoProject`, `DemoHacker`, `DemoSponsor` interface definitions from partial type hints
+- **Scoring algorithm** — Copilot autocompleted the seeded random scoring logic in `lib/demo/mockAI.ts` including the deterministic jitter system
+- **Superplane pipeline stages** — Copilot helped write the 6-stage pipeline visualization with animated connectors and stage output badges
+- **Apify fallback scoring** — Copilot suggested the `seededFloat` / `seededInt` deterministic scoring approach for private repos
+- **Tailwind UI patterns** — Copilot accelerated repetitive glass card, badge, and score bar component patterns across 16 pages
+- **Zynd integration** — Copilot helped structure the agent dispatch loop with sequential activation animations
+
+Copilot's inline suggestions reduced development time significantly across the entire codebase — from data models to API integrations to UI components.
 
 ---
 
@@ -126,6 +173,8 @@ Live at [`/pipeline`](https://touch-the-grass-ntyv.vercel.app/pipeline)
 | **Admin Control** | Toggle result visibility, manage event data |
 | **Community Board** | Team formation, skill matching, post interactions |
 
+![Hacker Dashboard](public/ss6.png)
+
 ---
 
 ## 🛠️ Tech Stack
@@ -136,6 +185,7 @@ AI / LLM          Groq API (LLaMA 3.3 70B Versatile)
 Agent Network     Zynd AI (x402 micropayments · Ed25519 identity)
 Repo Analysis     Apify + GitHub REST API
 Pipeline          Superplane (Canvas YAML · event-driven workflows)
+Dev Tooling       GitHub Copilot (used throughout development)
 State             React Context + localStorage
 Deployment        Vercel
 Analytics         Vercel Analytics
@@ -161,7 +211,7 @@ npm install
 
 # Set up environment variables
 cp .env.example .env.local
-# Fill in your API keys (see Environment Variables section)
+# Fill in your API keys
 
 # Start development server
 npm run dev
@@ -189,13 +239,13 @@ APIFY_API_TOKEN=your_apify_token
 
 ## 🎭 Demo Roles
 
-The platform has three demo roles — no signup required:
+No signup required — pick a role and explore:
 
-| Role | Access | Login |
-|------|--------|-------|
-| **Hacker** | Submit projects, view scores, check leaderboard | [Login as Hacker](https://touch-the-grass-ntyv.vercel.app/demo-login?role=hacker) |
-| **Judge** | Review projects, trigger pipelines, analyze students | [Login as Judge](https://touch-the-grass-ntyv.vercel.app/demo-login?role=judge) |
-| **Admin** | Full visibility, toggle result release, manage event | [Login as Admin](https://touch-the-grass-ntyv.vercel.app/demo-login?role=admin) |
+| Role | Access | Link |
+|------|--------|------|
+| **🔵 Hacker** | Submit projects, view scores, check leaderboard | [Login as Hacker](https://touch-the-grass-ntyv.vercel.app/demo-login?role=hacker) |
+| **🟢 Judge** | Review projects, trigger pipelines, analyze students | [Login as Judge](https://touch-the-grass-ntyv.vercel.app/demo-login?role=judge) |
+| **🟣 Admin** | Full visibility, toggle result release, manage event | [Login as Admin](https://touch-the-grass-ntyv.vercel.app/demo-login?role=admin) |
 
 ---
 
@@ -287,9 +337,10 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 Built with ❤️ for the **Bot-to-Agent Hackathon 2026**
 
-[![Zynd AI](https://img.shields.io/badge/Zynd%20AI-Agent%20Network-emerald?style=flat-square)](https://zynd.ai)
-[![Apify](https://img.shields.io/badge/Apify-Web%20Scraping-orange?style=flat-square)](https://apify.com)
-[![Superplane](https://img.shields.io/badge/Superplane-Pipeline-blue?style=flat-square)](https://superplane.com)
-[![Groq](https://img.shields.io/badge/Groq-LLaMA%203.3-red?style=flat-square)](https://groq.com)
+[![Zynd AI](https://img.shields.io/badge/Zynd%20AI-Agent%20Network-00d084?style=flat-square)](https://zynd.ai)
+[![Apify](https://img.shields.io/badge/Apify-Web%20Scraping-ff6b35?style=flat-square)](https://apify.com)
+[![Superplane](https://img.shields.io/badge/Superplane-Pipeline-3b82f6?style=flat-square)](https://superplane.com)
+[![Groq](https://img.shields.io/badge/Groq-LLaMA%203.3-f97316?style=flat-square)](https://groq.com)
+[![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-Assisted-black?style=flat-square&logo=github)](https://github.com/features/copilot)
 
 </div>

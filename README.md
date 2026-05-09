@@ -193,50 +193,6 @@ Analytics         Vercel Analytics
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- A Groq API key (free at [console.groq.com](https://console.groq.com))
-
-### Installation
-
-```bash
-# Clone the repo
-git clone https://github.com/atuljha-tech/touch-the-grass.git
-cd touch-the-grass
-
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env.local
-# Fill in your API keys
-
-# Start development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-### Environment Variables
-
-```env
-# Required — AI scoring, feedback, project briefs
-GROQ_API_KEY=your_groq_api_key
-
-# Recommended — raises GitHub API rate limit from 60 to 5000 req/hr
-GITHUB_TOKEN=your_github_token
-
-# Optional — Zynd AI agent network (works in demo mode without it)
-ZYND_API_KEY=your_zynd_api_key
-
-# Optional — Apify deep scraping (falls back to GitHub API without it)
-APIFY_API_TOKEN=your_apify_token
-```
-
----
-
 ## 🎭 Demo Roles
 
 No signup required — pick a role and explore:

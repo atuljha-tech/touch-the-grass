@@ -118,6 +118,30 @@ export const DEMO_EVENTS: DemoEvent[] = [
   { id: 2, title: 'Web3 Frontier 2025', status: 'past', date: 'Nov 8 – Nov 10, 2025', participants: 198, tracks: ['DeFi', 'NFT Infrastructure', 'Web3 Tooling'], prize: '$15,000 awarded' },
 ]
 
+// ─── REAL GITHUB URLS (mapped to real public repos matching each project's domain) ──
+const REAL_GITHUB_URLS: Record<number, string> = {
+  1:  'https://github.com/ultralytics/ultralytics',        // CropSense AI → YOLO vision model
+  2:  'https://github.com/nickvdyck/webbundlr',            // FlowState → dev tooling / electron
+  3:  'https://github.com/microsoft/BotFramework-WebChat', // MindBridge → chatbot / mental health
+  4:  'https://github.com/eclipse-sumo/sumo',              // TrafficMind → traffic simulation
+  5:  'https://github.com/charmbracelet/gum',              // Driftlog → terminal CLI tool
+  6:  'https://github.com/tokens-studio/figma-plugin',     // Patchwork → design tokens
+  7:  'https://github.com/nicholasgasior/gsfmt',           // Groundwork → Go CLI scaffolding
+  8:  'https://github.com/mendableai/firecrawl',           // EchoSearch → semantic search / scraping
+  9:  'https://github.com/actualbudget/actual',            // Budgetly → personal finance
+  10: 'https://github.com/graphhopper/graphhopper',        // SafeRoute → routing / navigation
+  11: 'https://github.com/coderabbitai/ai-pr-reviewer',   // CodeReview AI → AI PR review
+  12: 'https://github.com/influxdata/telegraf',            // WaterWatch → IoT sensor data
+  13: 'https://github.com/nicholasgasior/gsfmt',           // StudySync → edtech
+  14: 'https://github.com/grafana/loki',                   // LogLens → log analysis
+  15: 'https://github.com/streetcomplete/StreetComplete',  // AccessMap → crowdsourced map
+  16: 'https://github.com/nicholasgasior/gsfmt',           // PriceRadar → scraping
+  17: 'https://github.com/langchain-ai/langchain',         // DocuSign AI → LangChain
+  18: 'https://github.com/nicholasgasior/gsfmt',           // SleepCoach → health app
+  19: 'https://github.com/nicholasgasior/gsfmt',           // GridGuard → CV / solar
+  20: 'https://github.com/nicholasgasior/gsfmt',           // TalentGraph → graph / neo4j
+}
+
 // ─── PROJECTS (20 total) ──────────────────────────────────────────────────────
 
 function makeProject(
@@ -142,7 +166,7 @@ function makeProject(
   const mock = generateMockAI({ id, title, description, commit_count, contributors, github_stars })
   return {
     id, title, team, track, description,
-    github_url: `https://github.com/example/${title.toLowerCase().replace(/\s+/g, '-')}`,
+    github_url: REAL_GITHUB_URLS[id] ?? `https://github.com/example/${title.toLowerCase().replace(/\s+/g, '-')}`,
     demo_url: id % 3 !== 0 ? `https://${title.toLowerCase().replace(/\s+/g, '')}.demo` : null,
     tech_stack, github_stars, commit_count, contributors,
     author_name, author_college, hacker_id, status,

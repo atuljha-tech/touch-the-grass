@@ -36,13 +36,12 @@ function seededInt(seed: number, min: number, max: number): number {
   return Math.round(min + seededFloat(seed) * (max - min))
 }
 
-// Session jitter: changes every page load, but is stable within a session.
-// Produces a small float in [-0.25, +0.25].
+// Session jitter: stable per calendar day so SSR and client always agree.
+// Changes once per day so the leaderboard feels "live" across sessions.
 const SESSION_JITTER = (() => {
-  // Use current minute as the jitter epoch — changes every 60s max
-  const epoch = Math.floor(Date.now() / 60000)
-  const raw = seededFloat(epoch * 7919)   // prime multiplier for spread
-  return (raw - 0.5) * 0.5               // range: -0.25 to +0.25
+  const dayEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24))
+  const raw = seededFloat(dayEpoch * 7919)
+  return (raw - 0.5) * 0.5
 })()
 
 // Per-project jitter: each project gets a unique small offset so they

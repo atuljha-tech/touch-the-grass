@@ -1,11 +1,11 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
-const MODEL = 'llama3-8b-8192'
+const MODEL = 'llama-3.3-70b-versatile'
 const TIMEOUT_MS = 15000
 
 export async function generateAIResponse(prompt: string): Promise<string> {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey || apiKey === 'your_groq_api_key_here') {
-    throw new Error('GROQ_API_KEY is not configured. Add your key to .env.local')
+    throw new Error('NO_API_KEY')
   }
 
   const controller = new AbortController()

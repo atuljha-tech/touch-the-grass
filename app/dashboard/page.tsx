@@ -175,6 +175,24 @@ export default function HackerDashboard() {
           </GlassCard>
         )}
 
+        {/* Sponsor integration shortcuts */}
+        <div className="animate-fade-rise grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { href: '/agents', icon: '🤖', name: 'Zynd AI Agents', desc: 'Multi-agent project analysis', color: 'border-emerald-400/20 hover:border-emerald-400/40 hover:bg-emerald-400/5', badge: 'text-emerald-400 border-emerald-400/30' },
+            { href: '/deep-analysis', icon: '🔍', name: 'Deep Repo Analysis', desc: 'Apify-powered code intelligence', color: 'border-orange-400/20 hover:border-orange-400/40 hover:bg-orange-400/5', badge: 'text-orange-400 border-orange-400/30' },
+            { href: '/pipeline', icon: '⚡', name: 'Judging Pipeline', desc: 'Superplane workflow automation', color: 'border-blue-400/20 hover:border-blue-400/40 hover:bg-blue-400/5', badge: 'text-blue-400 border-blue-400/30' },
+          ].map((item) => (
+            <a key={item.href} href={item.href} className={`liquid-glass rounded-2xl p-5 border bg-white/[0.02] transition-all flex items-center gap-4 ${item.color}`}>
+              <span className="text-2xl">{item.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-foreground text-sm truncate">{item.name}</p>
+                <p className="text-muted-foreground text-xs truncate">{item.desc}</p>
+              </div>
+              <span className="text-xs">→</span>
+            </a>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* My Projects */}
           <div className="lg:col-span-2 flex flex-col gap-4">

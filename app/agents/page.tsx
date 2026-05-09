@@ -325,7 +325,7 @@ export default function AgentsPage() {
                     key={analysis.agent_name}
                     hover={false}
                     className="animate-fade-rise"
-                    style={{ animationDelay: `${i * 0.08}s` } as React.CSSProperties}
+                    style={{ animationDelay: `${i * 0.08}s` }}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2 flex-wrap">
